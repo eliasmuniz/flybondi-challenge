@@ -1,9 +1,28 @@
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from '@heroicons/react/24/solid'
 
-export default function Home() {
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { Flight } from "../types";
+import { GetStaticProps } from "next";
+import api from "../api";
+
+type Props = {
+  origins: Flight["origin"][];
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const origins = await api.origin.list();
+
+  return {
+    props: {
+      origins,
+    },
+  };
+};
+
+const Home: React.FC<Props> = ({ origins }) => {
+  console.log(origins);
+
   return (
     <>
       <Head>
@@ -14,18 +33,29 @@ export default function Home() {
       </Head>
       <div className="py-20 text-center">
         <h1 className="text-5xl ">
-          Bienvenido a <b className="text-yellow-400">FlyBondi</b>
+          Bienvenido a <b className="text-yellow-400">FlyBondi!</b>
         </h1>
+
+        <h4 className="mt-10 text-xl">
+          Busca vuelos baratos comenzando desde tu origen
+        </h4>
       </div>
 
-      <div className="grid grid-cols-3 px-56">
-        <Link href={"/cor"}>
-          <div className="flex gap-6 border border-slate-400 rounded-xl p-4 hover:border-yellow-500">
-            <h3 className="text-2xl font-semibold">COR</h3>
-            <ArrowRightIcon width={24} />
-          </div>
-        </Link>
+      <div className="grid grid-cols-2 gap-6 px-56">
+        {origins.map((origin) => (
+          <Link key={origin} href={`/${origin}`}>
+            <div className="flex gap-6 border border-slate-400 rounded-xl p-4 hover:border-yellow-500">
+              <h3 className="text-2xl font-semibold">{origin}</h3>
+              <p className="lg">
+                
+              </p>
+              <ArrowRightIcon width={24} />
+            </div>
+          </Link>
+        ))}
       </div>
     </>
   );
-}
+};
+
+export default Home;
