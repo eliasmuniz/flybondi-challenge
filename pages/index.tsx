@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 };
 
 const Home: React.FC<Props> = ({ origins }) => {
-  console.log(origins);
+ 
 
   return (
     <>
